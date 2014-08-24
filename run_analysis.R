@@ -35,10 +35,15 @@ dim(mean_std)
 
 allData=allData[ ,mean_std[ ,1]]
 
+# Use descriptive activity names to name the activities in the data set
+            
+label_names <- read.table("activity_labels.txt")
+
+for (i in 1:dim(label_names)[1]) {
+  allLabels[allLabels==i] <- tolower(label_names[label_names[,1]==i, 2])
+  }
 
 
-
-# Uses descriptive activity names to name the activities in the data set
 
 # Appropriately labels the data set with descriptive variable names. 
 
