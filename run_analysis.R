@@ -35,6 +35,8 @@ dim(mean_std)
 
 allData=allData[ ,mean_std[ ,1]]
 
+rm(features)
+
 # Use descriptive activity names to name the activities in the data set
             
 label_names <- read.table("activity_labels.txt")
@@ -43,9 +45,12 @@ for (i in 1:dim(label_names)[1]) {
   allLabels[allLabels==i] <- tolower(label_names[label_names[,1]==i, 2])
   }
 
+rm(label_names)
 
+# Appropriately label the data set with descriptive variable names. 
 
-# Appropriately labels the data set with descriptive variable names. 
+colnames(allData) <- mean_std[,2]
+
 
 # Creates a second, independent tidy data set with the average of each variable 
 # for each activity and each subject. 
