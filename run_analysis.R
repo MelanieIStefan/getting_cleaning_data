@@ -1,21 +1,25 @@
 ## load necessary libraries
 
 library(stringr)
+library(plyr)
 
 ## Merge the training and the test sets to create one data set.
 
-# Read in training and test data sets and labels
+# Read in training and test data sets, labels, list of subjects
 
 trainData <- read.table("train/X_train.txt")
 trainLabels <- read.table("train/y_train.txt")
+trainSubjects <- read.table("train/subject_train.txt")
 
 testData <- read.table("test/X_test.txt")
 testLabels <- read.table("test/y_test.txt")
+testSubjects <- read.table("test/subject_test.txt")
 
 # Merge test and train data
 
 allData <- rbind(trainData,testData)
 allLabels <- rbind(trainLabels,testLabels)
+allSubjects <- rbind(trainSubjects,testSubjects)
 
 # Remove datasets no longer used
 
@@ -23,6 +27,8 @@ rm(testData)
 rm(testLabels)
 rm(trainData)
 rm(trainLabels)
+rm(testSubjects)
+rm(trainSubjects)
 
 # Extract only the measurements on the mean and standard deviation for each measurement. 
 
@@ -52,5 +58,15 @@ rm(label_names)
 colnames(allData) <- mean_std[,2]
 
 
-# Creates a second, independent tidy data set with the average of each variable 
-# for each activity and each subject. 
+# Create a second, independent tidy data set with the average of each variable 
+# for each activity and each subject 
+
+combinedDataset <- cbind(allSubjects,allLabels,allData)
+combinedDataset <- as.data.frame(combinedDataset)
+colnames(combinedDataset)[1:2] <- c("subject","activity")
+
+combinedMeans <- ddply(combinedDataset, c("subject","activity"), function(df)colMeans(df[,3:81]))
+
+# write data file
+write.csv(combinedMeans, file="combinedMeans.csv") 
+
